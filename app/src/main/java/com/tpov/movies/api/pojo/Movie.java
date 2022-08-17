@@ -1,4 +1,4 @@
-package com.tpov.movies;
+package com.tpov.movies.api.pojo;
 
 import com.google.gson.annotations.SerializedName;
 

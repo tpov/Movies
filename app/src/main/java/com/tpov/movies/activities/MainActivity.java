@@ -1,4 +1,4 @@
-package com.tpov.movies;
+package com.tpov.movies.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.tpov.movies.api.pojo.Movie;
+import com.tpov.movies.R;
 
 import java.util.List;
 

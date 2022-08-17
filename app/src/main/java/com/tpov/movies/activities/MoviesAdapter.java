@@ -1,7 +1,5 @@
-package com.tpov.movies;
+package com.tpov.movies.activities;
 
-import android.media.Image;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.bumptech.glide.Glide;
+import com.tpov.movies.R;
+import com.tpov.movies.api.pojo.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

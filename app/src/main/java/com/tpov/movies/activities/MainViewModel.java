@@ -1,4 +1,4 @@
-package com.tpov.movies;
+package com.tpov.movies.activities;
 
 import android.app.Application;
 import android.util.Log;
@@ -7,6 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.tpov.movies.api.pojo.Movie;
+import com.tpov.movies.api.pojo.Response;
+import com.tpov.movies.api.ApiFactory;
 
 import java.util.List;
 

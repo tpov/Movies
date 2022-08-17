@@ -1,4 +1,6 @@
-package com.tpov.movies;
+package com.tpov.movies.api;
+
+import com.tpov.movies.api.pojo.Response;
 
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
