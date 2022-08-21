@@ -6,21 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <TableLayout
-        android:id="@+id/tabe_layout"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/rv_movies"
+        app:tabTextAppearance="@style/MyCustomTextAppearance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_movies"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/top_rated" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/popular"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/now_playing"/>
+
+    </com.google.android.material.tabs.TabLayout>
 
     <ProgressBar
         android:id="@+id/pb_loading"
@@ -32,15 +42,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/b_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
-        android:backgroundTint="#77FFFFFF"
-        android:text="Next"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_movies"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tl_category" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

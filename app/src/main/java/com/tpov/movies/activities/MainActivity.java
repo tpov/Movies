@@ -3,56 +3,34 @@ package com.tpov.movies.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
-import com.tpov.movies.api.pojo.Movie;
 import com.tpov.movies.R;
 
-import java.util.List;
+/**
+ * Link to the page
+ * https://api.themoviedb.org/3/movie/now_playing?api_key=97caa9884c8bd0dbad7c6aeb2e63c259&&language=en-US&page=1
+ * URL: popular
+ * URL: top_rated
+ * URL: now_playing
+ * <p>
+ * Link to the image
+ * "https://image.tmdb.org/t/p/w500" + movie.getPoster_path()
+ */
 
-//https://api.themoviedb.org/3/movie/now_playing?api_key=97caa9884c8bd0dbad7c6aeb2e63c259&&language=en-US&page=1
-//"https://image.tmdb.org/t/p/w500" + movie.getPoster_path()
-
-//        URL: popular
-//        URL: top_rated
-//        URL: now_playing
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-    private final int pageNowPlaying = 1;
-    private final int pageTopRated = 1;
-    private final int pagePopular = 1;
-    private int position = 0;
-
-    private List<Movie> moviesNowPlaying;
-    private List<Movie> moviesTopRated;
-    private List<Movie> moviesPopular;
-    private List<Movie> movies10;
 
     private RecyclerView recyclerView;
     private MoviesAdapter moviesAdapter;
     private TabLayout tabLayout;
-    private Button bNext;
     private ProgressBar progressBar;
-    private CardView cardView;
-
-    private String[] arrayNames = {
-            "popular",
-            "top_rated",
-            "now_playing"
-    };
 
     private MainViewModel viewModel;
 
@@ -63,100 +41,64 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        recyclerView = findViewById(R.id.rv_movies);
-        bNext = findViewById(R.id.b_next);
-        progressBar = findViewById(R.id.pb_loading);
-
         moviesAdapter = new MoviesAdapter();
+
+        initView();
+        observe();
+        initObserve();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewModel.position = tab.getPosition();
+                viewModel.loadPage(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         recyclerView.setAdapter(moviesAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        moviesAdapter.setOnMovieClickListener(new MoviesAdapter.OnMovieClickListener() {
-            @Override
-            public void onMovieClick(Movie movie) {
-                Intent intent = DetailMovieActivity.newIntent(MainActivity.this, movie);
-                startActivity(intent);
-            }
+        moviesAdapter.setOnMovieClickListener(movie -> {
+            Intent intent = DetailMovieActivity.newIntent(MainActivity.this, movie);
+            startActivity(intent);
         });
-/*
-        TabLayoutMediator(tabLayout, recyclerView) {
-            position
-        }*/
-
-        viewModel.getMoviesNowPlaying().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                moviesNowPlaying = movies;
-//                for (int i = 0; i < movies.size(); i++) {
-//                    if (i <= 10) {
-//                        moviesNowPlaying.set(i, movies.get(i));
-//                    }
-//                }
-            }
-        });
-
-        viewModel.getMoviesTopRated().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                moviesTopRated = movies;
-//                for (int i = 0; i < movies.size(); i++) {
-//                    if (i <= 10) {
-//                        moviesTopRated.set(i, movies.get(i));
-//                    }
-//                }
-                startAdapter(moviesTopRated);
-            }
-        });
-
-        viewModel.getMoviePopular().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                moviesPopular = movies;
-//                for (int i = 0; i < movies.size(); i++) {
-//                    if (i <= 10) {
-//                        moviesPopular.set(i, movies.get(i));
-//                    }
-//                }
-            }
-        });
-
-        bNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (position == 2) {
-                    position = 0;
-                } else {
-                    position++;
-                }
-                loadPage(position);
-            }
-        });
-
-        viewModel.loadMoviesNowPlaying(pageNowPlaying);
-        viewModel.loadMoviesTopRated(pageTopRated);
-        viewModel.loadMoviesPopular(pagePopular);
     }
 
-    private void loadPage(int p) {
-        if (p == 0) {
-            startAdapter(moviesTopRated);
-        } else if (p == 1) {
-            startAdapter(moviesPopular);
-        } else if (p == 2) {
-            startAdapter(moviesNowPlaying);
-        }
+    private void observe() {
+        viewModel.getProgressBarVisible().observe(this, visible -> progressBar.setVisibility(visible));
+
+        viewModel.getMoviesNowPlaying().observe(this, movies -> viewModel.moviesNowPlayingList = movies);
+
+        viewModel.getMoviesTopRated().observe(this, movies -> {
+            viewModel.moviesTopRatedList = movies;
+            viewModel.startAdapter(movies);   //Отображаем список который отображается при запуске приложения
+        });
+
+        viewModel.getMoviePopular().observe(this, movies -> viewModel.moviesPopularList = movies);
+
+        viewModel.progressBarVisibleLiveData(viewModel.VISIBLE_PB);
     }
 
-    private void startAdapter(List<Movie> list) {
-        Log.d(TAG, String.valueOf(list.size()));
-        for (int i = 0; i < list.size(); i++) {
-            if (list.size() > 10) {
-                list.remove(i);
-            }
-            Log.d(TAG, String.valueOf(list.size()));
-        }
-        moviesAdapter.setMovies(list);
-        progressBar.setVisibility(View.GONE);
+    private void initView() {
+        recyclerView = findViewById(R.id.rv_movies);
+        progressBar = findViewById(R.id.pb_loading);
+        tabLayout = findViewById(R.id.tl_category);
+    }
+
+    private void initObserve() {
+        viewModel.loadMoviesNowPlaying(viewModel.PAGE_NOW_PLAYING);
+        viewModel.loadMoviesTopRated(viewModel.PAGE_TOP_RATED);
+        viewModel.loadMoviesPopular(viewModel.PAGE_POPULAR);
+
     }
 }

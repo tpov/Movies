@@ -16,7 +16,7 @@ import com.tpov.movies.R;
 public class DetailMovieActivity extends AppCompatActivity {
 
     private static final String EXTRA_MOVIE = "movie";
-    private final String urlPage = "https://image.tmdb.org/t/p/w500";
+    private static final String urlImage = "https://image.tmdb.org/t/p/w500";
 
     private ImageView imageMovie;
     private TextView tvTitle;
@@ -36,14 +36,13 @@ public class DetailMovieActivity extends AppCompatActivity {
         Movie movie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
 
         Glide.with(this)
-                .load(urlPage + movie.getPoster_path())
+                .load(urlImage + movie.getPoster_path())
                 .into(imageMovie);
         tvTitle.setText(movie.getTitle());
-        tvVoteAverage.setText("Vote average:" + String.valueOf(movie.getVote_average()));
-        tvReleaseDate.setText("Release date: " + movie.getRelease_date());
-        tvPopularity.setText("Popularity: " + String.valueOf(movie.getVote_count()));
+        tvVoteAverage.setText(String.valueOf(R.string.vote_average) + movie.getVote_average());
+        tvReleaseDate.setText(String.valueOf(R.string.release_date) + movie.getRelease_date());
+        tvPopularity.setText(String.valueOf(R.string.popularity) + movie.getVote_count());
         tvOverview.setText(movie.getOverview());
-
     }
 
     private void initView() {

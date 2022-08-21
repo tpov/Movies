@@ -1,5 +1,6 @@
 package com.tpov.movies.activities;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     private final String urlPage = "https://image.tmdb.org/t/p/w500";
 
     private List<Movie> movies = new ArrayList<>();
+    private int positionTab;
 
     private OnMovieClickListener onMovieClickListener;
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<Movie> movies, int position) {
+        this.positionTab = position;
         this.movies = movies;
         notifyDataSetChanged();
     }
@@ -55,17 +58,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             Glide.with(holder.itemView)
                     .load(urlPage + movie.getPoster_path())
                     .into(holder.imageViewPoster);
-            holder.textViewRating.setText(String.valueOf(movie.getVote_average()));
+            holder.textViewRating.setText(getTextByPosition(positionTab, movie));
 
-            holder.imageViewPoster.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onMovieClickListener != null) {
-                        onMovieClickListener.onMovieClick(movie);
-                    }
+            holder.imageViewPoster.setOnClickListener(v -> {
+                if (onMovieClickListener != null) {
+                    onMovieClickListener.onMovieClick(movie);
                 }
             });
+    }
 
+    private String getTextByPosition(int positionTab, Movie movie) {
+        if (positionTab == 0) return String.valueOf(movie.getVote_average());
+           else if (positionTab == 1) return String.valueOf(movie.getPopularity());
+           else return String.valueOf(movie.getRelease_date());
     }
 
     @Override

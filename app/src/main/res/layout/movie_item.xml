@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
+
     android:layout_margin="4dp"
     app:cardCornerRadius="10dp"
     app:cardPreventCornerOverlap="false"
@@ -25,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@android:color/holo_green_light"
+        android:background="#8099CC00"
         android:padding="16dp"
         android:text="TextView"
         android:textColor="#0D47A1"
