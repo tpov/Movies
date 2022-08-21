@@ -40,13 +40,10 @@ public class MainViewModel extends AndroidViewModel {
     private MoviesAdapter moviesAdapter = new MoviesAdapter();
 
     private static final String TAG = "MainViewModel";
-    private final MutableLiveData<List<Movie>> moviesNowPlaying = new MutableLiveData<>();
     private final CompositeDisposable compositeDisposableNowPlaying = new CompositeDisposable();
 
-    private final MutableLiveData<List<Movie>> moviesTopRated = new MutableLiveData<>();
     private final CompositeDisposable compositeDisposableTopRated = new CompositeDisposable();
 
-    private final MutableLiveData<List<Movie>> moviesPopular = new MutableLiveData<>();
     private final CompositeDisposable compositeDisposablePopular = new CompositeDisposable();
 
     private final MutableLiveData<Integer> progressBarVisible = new MutableLiveData<>();
@@ -59,17 +56,6 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<Movie>> getMoviesNowPlaying() {
-        return moviesNowPlaying;
-    }
-
-    public LiveData<List<Movie>> getMoviesTopRated() {
-        return moviesTopRated;
-    }
-
-    public LiveData<List<Movie>> getMoviePopular() {
-        return moviesPopular;
-    }
 
     //RxJava
     public void loadMoviesNowPlaying(int pageNowPlaying) {
