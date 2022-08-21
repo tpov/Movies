@@ -76,16 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void observe() {
         viewModel.getProgressBarVisible().observe(this, visible -> progressBar.setVisibility(visible));
-
-        viewModel.getMoviesNowPlaying().observe(this, movies -> viewModel.moviesNowPlayingList = movies);
-
-        viewModel.getMoviesTopRated().observe(this, movies -> {
-            viewModel.moviesTopRatedList = movies;
-            viewModel.startAdapter(movies);   //Отображаем список который отображается при запуске приложения
-        });
-
-        viewModel.getMoviePopular().observe(this, movies -> viewModel.moviesPopularList = movies);
-
         viewModel.progressBarVisibleLiveData(viewModel.VISIBLE_PB);
     }
 

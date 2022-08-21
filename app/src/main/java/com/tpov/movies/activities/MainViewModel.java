@@ -76,7 +76,7 @@ public class MainViewModel extends AndroidViewModel {
         Disposable disposable = ApiFactory.apiService.loadMoviesNowPlaying(pageNowPlaying)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> moviesNowPlaying.postValue(response.getResults()),
+                .subscribe(response -> moviesNowPlayingList = response.getResults(),
                         throwable -> {
 
                         });
@@ -87,18 +87,22 @@ public class MainViewModel extends AndroidViewModel {
         Disposable disposable = ApiFactory.apiService.loadMoviesTopRated(pageTopRated)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> moviesTopRated.postValue(response.getResults()),
+                .subscribe(response -> {
+                            moviesTopRatedList = response.getResults();
+                            startAdapter(response.getResults());   //Отображаем список который отображается при запуске приложения
+                        },
                         throwable -> {
 
                         });
         compositeDisposableTopRated.add(disposable);
+
     }
 
     public void loadMoviesPopular(int pagePopular) {
         Disposable disposable = ApiFactory.apiService.loadMoviesPopular(pagePopular)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> moviesPopular.postValue(response.getResults()));
+                .subscribe(response -> moviesPopularList = response.getResults());
         compositeDisposablePopular.add(disposable);
     }
 
