@@ -75,7 +75,7 @@ public class MainViewModel extends AndroidViewModel {
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                             moviesTopRatedList = response.getResults();
-                            startAdapter(response.getResults());   //Отображаем список который отображается при запуске приложения
+                            startAdapter(moviesTopRatedList);   //Отображаем список который отображается при запуске приложения
                         },
                         throwable -> {
 
