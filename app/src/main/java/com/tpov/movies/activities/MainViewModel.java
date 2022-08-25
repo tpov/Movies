@@ -4,15 +4,16 @@ import android.app.Application;
 import android.util.Log;
 import android.view.View;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.tpov.movies.activities.MoviesAdapter;
 import com.tpov.movies.api.ApiFactory;
 import com.tpov.movies.api.pojo.Movie;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -37,9 +38,7 @@ public class MainViewModel extends AndroidViewModel {
     public List<Movie> moviesNowPlayingList;
     public List<Movie> moviesTopRatedList;
     public List<Movie> moviesPopularList;
-    private MoviesAdapter moviesAdapter = new MoviesAdapter();
 
-    private static final String TAG = "MainViewModel";
     private final CompositeDisposable compositeDisposableNowPlaying = new CompositeDisposable();
 
     private final CompositeDisposable compositeDisposableTopRated = new CompositeDisposable();
@@ -47,6 +46,8 @@ public class MainViewModel extends AndroidViewModel {
     private final CompositeDisposable compositeDisposablePopular = new CompositeDisposable();
 
     private final MutableLiveData<Integer> progressBarVisible = new MutableLiveData<>();
+    
+    private final MutableLiveData<List> startAdapter = new MutableLiveData<>();
 
     public LiveData<Integer> getProgressBarVisible() {
         return progressBarVisible;
@@ -55,8 +56,7 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
     }
-
-
+    
     //RxJava
     public void loadMoviesNowPlaying(int pageNowPlaying) {
         Disposable disposable = ApiFactory.apiService.loadMoviesNowPlaying(pageNowPlaying)
@@ -75,7 +75,7 @@ public class MainViewModel extends AndroidViewModel {
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                             moviesTopRatedList = response.getResults();
-                            startAdapter(moviesTopRatedList);   //Отображаем список который отображается при запуске приложения
+                            startAdapter(response.getResults());   //Отображаем список который отображается при запуске приложения
                         },
                         throwable -> {
 
@@ -103,20 +103,26 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void startAdapter(List<Movie> list) {
-        Log.d(TAG, String.valueOf(list.size()));
         for (int i = 0; i < list.size(); i++) {
             if (list.size() > COUNT_FILMS_IN_PAGE) {
                 list.remove(i);
             }
         }
-        moviesAdapter.setMovies(list, position);
-        progressBarVisibleLiveData(GONE_PB);
+        startAdapterLivedata(list);
+
     }
 
     public void progressBarVisibleLiveData(Integer visible) {
-        progressBarVisible.setValue(visible);
+        progressBarVisible.postValue(visible);
     }
 
+    public void startAdapterLivedata(List<Movie> list) {
+        startAdapter.postValue(list);
+    }
+
+    public LiveData<List> getStartAdapter() {
+        return startAdapter;
+    }
     @Override
     protected void onCleared() {
         super.onCleared();

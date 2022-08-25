@@ -1,7 +1,5 @@
 package com.tpov.movies.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.tpov.movies.api.pojo.Movie;
 import com.tpov.movies.R;
+import com.tpov.movies.api.pojo.Movie;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 public class DetailMovieActivity extends AppCompatActivity {
-
     private static final String EXTRA_MOVIE = "movie";
     private static final String urlImage = "https://image.tmdb.org/t/p/w500";
 
@@ -25,7 +25,9 @@ public class DetailMovieActivity extends AppCompatActivity {
     private TextView tvPopularity;
     private TextView tvOverview;
 
+
     @SuppressLint("SetTextI18n")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         initView();
 
         Movie movie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
+
 
         Glide.with(this)
                 .load(urlImage + movie.getPoster_path())

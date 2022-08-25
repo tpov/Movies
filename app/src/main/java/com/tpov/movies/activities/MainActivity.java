@@ -5,25 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
+import com.google.android.material.tabs.TabLayout;
+import com.tpov.movies.R;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.tabs.TabLayout;
-import com.tpov.movies.R;
-
-/**
- * Link to the page
- * https://api.themoviedb.org/3/movie/now_playing?api_key=97caa9884c8bd0dbad7c6aeb2e63c259&&language=en-US&page=1
- * URL: popular
- * URL: top_rated
- * URL: now_playing
- * <p>
- * Link to the image
- * "https://image.tmdb.org/t/p/w500" + movie.getPoster_path()
- */
-
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView.setAdapter(moviesAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         moviesAdapter.setOnMovieClickListener(movie -> {
             Intent intent = DetailMovieActivity.newIntent(MainActivity.this, movie);
@@ -76,7 +65,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void observe() {
         viewModel.getProgressBarVisible().observe(this, visible -> progressBar.setVisibility(visible));
-        viewModel.progressBarVisibleLiveData(viewModel.VISIBLE_PB);
+        viewModel.getStartAdapter().observe(this, new Observer<List>() {
+            @Override
+            public void onChanged(List list) {
+                startAdapter(list);
+            }
+        });
+    }
+
+    private void startAdapter(List list) {
+
+        viewModel.progressBarVisibleLiveData(MainViewModel.VISIBLE_PB);
+        moviesAdapter.setMovies(list, viewModel.position);
+        recyclerView.setAdapter(moviesAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        viewModel.progressBarVisibleLiveData(MainViewModel.GONE_PB);
     }
 
     private void initView() {
@@ -86,9 +89,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initObserve() {
-        viewModel.loadMoviesNowPlaying(viewModel.PAGE_NOW_PLAYING);
-        viewModel.loadMoviesTopRated(viewModel.PAGE_TOP_RATED);
-        viewModel.loadMoviesPopular(viewModel.PAGE_POPULAR);
-
+        viewModel.loadMoviesNowPlaying(MainViewModel.PAGE_NOW_PLAYING);
+        viewModel.loadMoviesTopRated(MainViewModel.PAGE_TOP_RATED);
+        viewModel.loadMoviesPopular(MainViewModel.PAGE_POPULAR);
     }
 }

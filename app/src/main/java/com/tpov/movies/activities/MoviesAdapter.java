@@ -1,15 +1,10 @@
 package com.tpov.movies.activities;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.bumptech.glide.Glide;
 import com.tpov.movies.R;
@@ -17,6 +12,9 @@ import com.tpov.movies.api.pojo.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
@@ -54,23 +52,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-            Movie movie = movies.get(position);
-            Glide.with(holder.itemView)
-                    .load(urlPage + movie.getPoster_path())
-                    .into(holder.imageViewPoster);
-            holder.textViewRating.setText(getTextByPosition(positionTab, movie));
+        Movie movie = movies.get(position);
+        Glide.with(holder.itemView)
+                .load(urlPage + movie.getPoster_path())
+                .into(holder.imageViewPoster);
+        holder.textViewRating.setText(getTextByPosition(positionTab, movie));
 
-            holder.imageViewPoster.setOnClickListener(v -> {
-                if (onMovieClickListener != null) {
-                    onMovieClickListener.onMovieClick(movie);
-                }
-            });
+        holder.imageViewPoster.setOnClickListener(v -> {
+            if (onMovieClickListener != null) {
+                onMovieClickListener.onMovieClick(movie);
+            }
+        });
     }
 
     private String getTextByPosition(int positionTab, Movie movie) {
         if (positionTab == 0) return String.valueOf(movie.getVote_average());
-           else if (positionTab == 1) return String.valueOf(movie.getPopularity());
-           else return String.valueOf(movie.getRelease_date());
+        else if (positionTab == 1) return String.valueOf(movie.getPopularity());
+        else return String.valueOf(movie.getRelease_date());
     }
 
     @Override
@@ -78,7 +76,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         return movies.size();
     }
 
-    static class MovieViewHolder extends ViewHolder {
+    static class MovieViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView imageViewPoster;
         private final TextView textViewRating;
